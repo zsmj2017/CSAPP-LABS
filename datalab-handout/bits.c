@@ -171,7 +171,31 @@ int logicalShift(int x, int n) {
  *   Rating: 4
  */
 int bitCount(int x) {
-  return 2;
+    int sum = 0;
+    int i = 0x11 | (0x11 << 8);
+    i = i |(i << 16);
+
+    // 对于每四位，通过不停的移位运算将前三位的1加到第四位上
+    // sum的每4位则代表原始数据对应4位的1的个数
+    sum += x & i;
+    sum += (x >> 1) & i;
+    sum += (x >> 2) & i;
+    sum += (x >> 3) & i;
+  
+    // 令i = 0xffff;
+    i = 0xff | (0xff<<8);
+  
+    // 将前16位与后16位相加
+    // 压缩数据至后16位
+    sum = (sum >> 16) + (i & sum);
+  
+    i = 0;
+    i +=  (sum & 0xf);
+    i += (sum >> 4) & 0xf;
+    i += (sum >> 8) & 0xf;
+    i += (sum >> 12) & 0xf;
+
+    return i;
 }
 /* 
  * bang - Compute !x without using !
