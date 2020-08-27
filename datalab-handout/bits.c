@@ -161,7 +161,17 @@ int getByte(int x, int n) {
  *   Rating: 3 
  */
 int logicalShift(int x, int n) {
-    return ((x >> n) << n ) >> n;
+    // let mask = 0XFFFFFFFF
+    int mask = 0XFF;
+    mask = mask | mask << 8;
+    mask = mask | mask << 16;
+    // (x << 32) == x
+    // so << 31 and then << 1
+    mask = mask << (~n + 32);
+    mask = mask << 1;
+    mask = ~mask;
+    x = (x >> n) & mask;
+    return x;
 }
 /*
  * bitCount - returns count of number of 1's in word
@@ -188,7 +198,7 @@ int bitCount(int x) {
     // 将前16位与后16位相加
     // 压缩数据至后16位
     sum = (sum >> 16) + (i & sum);
-  
+ 
     i = 0;
     i +=  (sum & 0xf);
     i += (sum >> 4) & 0xf;
