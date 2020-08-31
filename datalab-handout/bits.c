@@ -215,7 +215,12 @@ int bitCount(int x) {
  *   Rating: 4 
  */
 int bang(int x) {
-  return 2;
+    x = (x >> 16) | x;
+    x = (x >> 8) | x;
+    x = (x >> 4) | x;
+    x = (x >> 2) | x;
+    x = (x >> 1) | x;
+    return ~x & 1;
 }
 /* 
  * tmin - return minimum two's complement integer 
@@ -224,7 +229,9 @@ int bang(int x) {
  *   Rating: 1
  */
 int tmin(void) {
-  return 2;
+    int res = 0X01;
+    res = res << 31;
+    return res;
 }
 /* 
  * fitsBits - return 1 if x can be represented as an 
@@ -257,7 +264,7 @@ int divpwr2(int x, int n) {
  *   Rating: 2
  */
 int negate(int x) {
-  return 2;
+  return ~x + 1; 
 }
 /* 
  * isPositive - return 1 if x > 0, return 0 otherwise 
@@ -267,7 +274,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
-  return 2;
+    return ~((x >> 31) & 1) & (!!x);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
