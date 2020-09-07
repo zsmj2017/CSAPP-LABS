@@ -243,7 +243,13 @@ int tmin(void) {
  *   Rating: 2
  */
 int fitsBits(int x, int n) {
-  return 2;
+    // 判断一个数能否被n位补码表示
+    // 101用3位补码表示为负数，因此不可表示
+    // 只需要将x左移32-n位，再右移回来，判断与x是否想等即可（运用算术右移性质）
+    // 判断想等可直接使用异或
+    int num = 33 + ~n;
+    int res = (x << num) >> num;
+    return !(res ^ x);
 }
 /* 
  * divpwr2 - Compute x/(2^n), for 0 <= n <= 30
@@ -254,7 +260,9 @@ int fitsBits(int x, int n) {
  *   Rating: 2
  */
 int divpwr2(int x, int n) {
-    return 2;
+    // 给负数增加一个修正，保证向0对齐
+    int bias = (x >> 31) & (( 1 << n) + ~0);
+    return (x + bias) >> n;
 }
 /* 
  * negate - return -x 
@@ -274,6 +282,7 @@ int negate(int x) {
  *   Rating: 3
  */
 int isPositive(int x) {
+    // 判断符号位且不等于0
     return ~((x >> 31) & 1) & (!!x);
 }
 /* 
